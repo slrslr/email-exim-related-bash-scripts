@@ -1,0 +1,5 @@
+echo "Now wait to directories sending most mail";grep cwd /var/log/exim_mainlog | grep -v /var/spool | awk -F"cwd=" '{print $2}' | awk '{print $1}' | sort | uniq -c | sort -n
+echo ""
+echo "Can use grep -Ril \" mail(\" . to find mailing script"
+echo "Mailing flood? Use frozen cleaner scripts from /root fir:"
+ls /root/|grep -E "exi|mail"
