@@ -1,0 +1,41 @@
+echo "
+
+show exim statistics
+eximstats -ne -nr -nt /var/log/exim_mainlog
+
+show mail queue
+exim -bp
+
+flush mail queue
+exim -qff
+
+show mail body
+exim -Mvb MessageID
+
+show mail headers
+exim -Mvh MessageID
+
+Delete all "Frozen" mails in queue
+1) exiqgrep -zi | xargs exim -Mrm
+2) /usr/sbin/exim -bpr | grep frozen | awk {'print $3'} | xargs exim -Mrm
+
+Delete failed delivery messages to (likely) non-existent senders:
+exiqgrep -i -f '<>' | xargs exim -Mrm
+
+Find & delete messages where recipient contains
+exiqgrep -r recipient@xxx.com | awk {'print $3'} | xargs exim -Mrm
+
+Find & delete messages where sender contains
+exiqgrep -f sender@xxx.com | awk {'print $3'} | xargs exim -Mrm
+
+Find & delete messages of speciffied email user:
+# grep -lr 'user@domain.com' /var/spool/exim/input/ | sed -e 's/^.*\/\([a-zA-Z0-9-]*\)-[DH]$/\1/g' | xargs exim -Mrm
+# exim -bp | grep "user_email-account" | awk '{print $3}' | xargs exim -Mrm
+
+Show folders which sent most emails in last hours
+grep cwd /var/log/exim_mainlog | grep -v /var/spool | awk -F"cwd=" '{print $2}' | awk '{print $1}' | sort | uniq -c | sort -n
+
+Delete only SYSTEM messages (warning shits etc)
+exiqgrep -i -f '<System>' | xargs exim -Mrm
+
+"

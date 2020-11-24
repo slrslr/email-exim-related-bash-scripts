@@ -1,0 +1,17 @@
+# echo "Send mail alert if too many emails in exim mailqueue"
+
+emailnumber=$(exim -bpc | grep -E '^[0-9]+$')
+recipientmail=admin@mail
+maxqmails=4000
+badmsg="$emailnumber queued mails IS greater than $maxqmails at $(hostname). Bad. Try to run /root/showtopmailers & suspend"
+goodmsg="$emailnumber queued mails is NOT greater than $maxqmails. Good"
+
+if [ "$emailnumber" -gt "$maxqmails" ];then
+echo "$badmsg" | mail -s "More than $maxqmails in $(hostname) queue so /root/exim_delete_frozen was executed" $recipientmail
+/bin/sh /root/exim_delete_frozen > /dev/null 2>&1
+fi
+
+# someone spamming from an email account?
+exiqgrep -f @domain.here | awk {'print $3'}|xargs exim -Mrm >/dev/null 2>&1
+
+# last line

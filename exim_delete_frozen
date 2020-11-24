@@ -1,0 +1,1 @@
+exiqgrep -zi|xargs exim -Mrm

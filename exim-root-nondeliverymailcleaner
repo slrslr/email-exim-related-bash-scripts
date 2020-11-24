@@ -1,0 +1,4 @@
+while true;do
+exiqgrep -i -f '<>' | xargs exim -Mrm
+sleep 10
+done

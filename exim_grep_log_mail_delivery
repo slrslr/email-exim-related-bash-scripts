@@ -1,0 +1,2 @@
+tail -n 250 /var/log/{maillog,exim_mainlog,exim_rejectlog};date
+echo "Command used: tail -n 250 /var/log/{maillog,exim_mainlog,exim_rejectlog};date"
