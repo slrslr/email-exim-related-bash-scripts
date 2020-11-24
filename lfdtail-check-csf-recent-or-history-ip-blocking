@@ -1,0 +1,13 @@
+date
+echo "What is the month to filter out out of the LFD logfile? Example Apr Mar May Jun Jul Aug"
+read month
+echo -e "tail -f /var/log/lfd.log|grep "$month"|grep \"Blocked in csf\"|grep -vE \"FTP|bind|mod_security\"\n
+cat /var/log/lfd.log|grep "$month"|grep \"Blocked in csf\"|grep -vE \"bind triggered|Suspicious Process|block removed|Failed FTP|id:5000135|id:5000223|Port Scan|Failed cPanel login|Failed POP3|Failed SMTP AUTH\""
+echo -e "\nWrite 1 for 1st command or any other key for 2nd command."
+read cmd
+if [[ "$cmd" != "1" ]];then
+cat /var/log/lfd.log|grep $month|grep "Blocked in csf"|grep -vE "bind triggered|Suspicious Process|block removed|Failed FTP|id:5000135|id:5000223|id:5000224"
+else
+echo -e "Note that this is tail -f so nothing may output if nothing is being blocked currently.\\nYou can also try this full listing command: cat /var/log/lfd.log|grep "$month"|grep \"Blocked in csf\"|grep -vE \"FTP|bind|mod_security\""
+tail -f /var/log/lfd.log|grep "$month"|grep "Blocked in csf"|grep -vE "FTP|bind|mod_security"
+fi
